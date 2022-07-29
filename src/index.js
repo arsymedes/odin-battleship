@@ -1,3 +1,5 @@
+import display from "./display"
+
 const Ship = (length, align, xCor, yCor) => {
   const hitpoints = Array(length).fill(0);
 
@@ -15,12 +17,13 @@ const Ship = (length, align, xCor, yCor) => {
     align,
     xCor,
     yCor,
+    hitpoints,
     hit,
     isSunk,
   };
 };
 
-const Gameboard = (() => {
+const Gameboard = () => {
   const ships = [
     Ship(5, "horizontal", 0, 0), // Ship(length, align, xCor, yCor)
     Ship(3, "horizontal", 3, 2),
@@ -69,6 +72,21 @@ const Gameboard = (() => {
     receiveAttack,
     allShipSunk,
   };
-})();
+};
 
-export { Ship, Gameboard };
+const Player = () => {
+  const gameboard = Gameboard()
+
+  function attack(xHit, yHit, enemy) {
+    enemy.gameboard.receiveAttack(xHit, yHit)
+  }
+
+  return {
+    gameboard,
+    attack,
+  }
+}
+
+display.start()
+
+export { Ship, Gameboard, Player };

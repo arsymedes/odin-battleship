@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+@font-face {
+  font-family: "airborne";
+  src: url('./airborne.otf') format('truetype');
+}
+
+body {
+  background-color: black;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 30px;
+}
+
+h1 {
+  font-family: "airborne", "Roboto";
+  font-size: 8rem;
+  font-weight: 1000;
+  letter-spacing: 0.5rem;
+  transform: scale(1, 0.7);
+  margin: 0;
+}
