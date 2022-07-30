@@ -87,6 +87,6 @@ const Player = () => {
   }
 }
 
-display.start()
+display.gameScreen()
 
 export { Ship, Gameboard, Player };

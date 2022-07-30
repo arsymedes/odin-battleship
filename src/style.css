@@ -5,13 +5,25 @@
   src: url('./airborne.otf') format('truetype');
 }
 
+:root {
+  --nice-red:#fd6d6d;
+  --nice-yellow:rgb(250, 250, 85);
+  --yes:rgba(104, 201, 104);
+  --no: rgba(237, 94, 104);
+  --nice-maroon: rgb(150, 63, 63);
+  font-family: "Roboto", sans-serif;
+}
+
 body {
   background-color: black;
   color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 30px;
+  justify-content: space-between;
+  padding: 30px 0;
+  box-sizing: border-box;
+  height: 100vh;
 }
 
 h1 {
@@ -19,6 +31,31 @@ h1 {
   font-size: 8rem;
   font-weight: 1000;
   letter-spacing: 0.5rem;
-  transform: scale(1, 0.7);
+  transform: scale(1, 0.8);
   margin: 0;
+}
+
+.grids {
+  display: flex;
+  gap: 30px;
+}
+
+.grid {
+  display: grid;
+  background-color: white;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  gap: 2px;
+  border: white solid 2px;
+}
+
+.cell {
+  box-sizing: border-box;
+  aspect-ratio: 1 / 1;
+  height: 30px;
+  background-color: black;
+}
+
+.footer {
+  font-size: 1.5rem;
 }
