@@ -31,27 +31,27 @@ describe("Ship Test", () => {
 describe("Gameboard Test", () => {
   test("Gameboard: Attack Received", () => {
     const gameboard = Gameboard();
-    expect(gameboard.checkAttack(0, 0)).toBe(true);
+    expect(gameboard.checkShip(0, 0)).toBe(true);
   });
 
   test("Gameboard: Attack Received, edge case", () => {
     const gameboard = Gameboard();
-    expect(gameboard.checkAttack(4, 0)).toBe(true);
+    expect(gameboard.checkShip(4, 0)).toBe(true);
   });
 
   test("Gameboard: Attack Received, edge case 2", () => {
     const gameboard = Gameboard();
-    expect(gameboard.checkAttack(5, 0)).toBe(false);
+    expect(gameboard.checkShip(5, 0)).toBe(false);
   });
 
   test("Gameboard: Attack Received, vertical", () => {
     const gameboard = Gameboard();
-    expect(gameboard.checkAttack(4, 6)).toBe(true);
+    expect(gameboard.checkShip(4, 6)).toBe(true);
   });
 
   test("Gameboard: Attack Received, vertical edge case", () => {
     const gameboard = Gameboard();
-    expect(gameboard.checkAttack(4, 7)).toBe(false);
+    expect(gameboard.checkShip(4, 7)).toBe(false);
   });
 
   test("Gameboard: All Ship Not Sunk", () => {
@@ -78,7 +78,7 @@ describe("Gameboard Test", () => {
 describe("Player Test", () => {
   test("Gameboard: Attack Received, vertical edge case", () => {
     const gameboard = Gameboard();
-    expect(gameboard.checkAttack(4, 7)).toBe(false);
+    expect(gameboard.checkShip(4, 7)).toBe(false);
   });
   
   test("Player: Attack Enemy Gameboard", () => {

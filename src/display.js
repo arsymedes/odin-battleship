@@ -1,7 +1,7 @@
 import "normalize.css";
 import "./style.css";
 
-const display = (() => {
+const Display = (() => {
   const body = document.querySelector("body");
 
   function makeGrid() {
@@ -15,6 +15,10 @@ const display = (() => {
       grid.appendChild(cell);
     }
     return grid;
+  }
+
+  function colorShip(grid, gameboard) {
+    gameboard.ships.forEach()
   }
 
   function makeFooter() {
@@ -49,4 +53,8 @@ const display = (() => {
   };
 })();
 
-export default display;
+const Populate = (() => {
+
+})()
+
+export { Display, Populate };

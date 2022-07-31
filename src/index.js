@@ -1,4 +1,4 @@
-import display from "./display"
+import { Display, Populate} from "./display"
 
 const Ship = (length, align, xCor, yCor) => {
   const hitpoints = Array(length).fill(0);
@@ -32,7 +32,7 @@ const Gameboard = () => {
 
   const missedAttacks = [];
 
-  function checkAttack(xHit, yHit) {
+  function checkShip(xHit, yHit) {
     let flag = false;
     ships.forEach((ship) => {
       if (
@@ -58,7 +58,9 @@ const Gameboard = () => {
   }
 
   function receiveAttack(xHit, yHit) {
-    if (checkAttack(xHit, yHit) === false) {
+    if (checkShip(xHit, yHit) === true) {
+      
+    } else if (checkShip(xHit, yHit) === false) {
       missedAttacks.push([xHit, yHit]);
     }
   }
@@ -68,7 +70,8 @@ const Gameboard = () => {
   }
 
   return {
-    checkAttack,
+    ships,
+    checkShip,
     receiveAttack,
     allShipSunk,
   };
@@ -87,6 +90,6 @@ const Player = () => {
   }
 }
 
-display.gameScreen()
+Display.gameScreen()
 
 export { Ship, Gameboard, Player };
