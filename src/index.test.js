@@ -1,4 +1,4 @@
-import { Ship, Gameboard, Player } from "./index";
+import { Ship, Gameboard, Player, Game } from "./index";
 
 describe("Ship Test", () => {
   test("Ship: Length", () => {
@@ -31,27 +31,27 @@ describe("Ship Test", () => {
 describe("Gameboard Test", () => {
   test("Gameboard: Attack Received", () => {
     const gameboard = Gameboard();
-    expect(gameboard.checkShip(0, 0)).toBe(true);
+    expect(gameboard.isShip(0, 0)).toBe(true);
   });
 
   test("Gameboard: Attack Received, edge case", () => {
     const gameboard = Gameboard();
-    expect(gameboard.checkShip(4, 0)).toBe(true);
+    expect(gameboard.isShip(4, 0)).toBe(true);
   });
 
   test("Gameboard: Attack Received, edge case 2", () => {
     const gameboard = Gameboard();
-    expect(gameboard.checkShip(5, 0)).toBe(false);
+    expect(gameboard.isShip(5, 0)).toBe(false);
   });
 
   test("Gameboard: Attack Received, vertical", () => {
     const gameboard = Gameboard();
-    expect(gameboard.checkShip(4, 6)).toBe(true);
+    expect(gameboard.isShip(4, 6)).toBe(true);
   });
 
   test("Gameboard: Attack Received, vertical edge case", () => {
     const gameboard = Gameboard();
-    expect(gameboard.checkShip(4, 7)).toBe(false);
+    expect(gameboard.isShip(4, 7)).toBe(false);
   });
 
   test("Gameboard: All Ship Not Sunk", () => {
@@ -76,17 +76,29 @@ describe("Gameboard Test", () => {
 });
 
 describe("Player Test", () => {
-  test("Gameboard: Attack Received, vertical edge case", () => {
-    const gameboard = Gameboard();
-    expect(gameboard.checkShip(4, 7)).toBe(false);
-  });
-  
   test("Player: Attack Enemy Gameboard", () => {
     const player1 = Player();
     const player2 = Player();
-    const spy = jest.spyOn(player2.gameboard, "receiveAttack")
-    player1.attack(0, 0, player2);
+    const spy = jest.spyOn(player2.gameboard, "receiveAttack");
+    const cell = {dataset: {column: 0, row: 0}}
+    player1.attack(cell, player2);
     expect(spy).toHaveBeenCalled();
+  });
+});
 
+describe("Game Test", () => {
+  test("Game: Turn", () => {
+    const player1 = Player();
+    const player2 = Player();
+    const game = Game(player1, player2)
+    expect(game.player).toBe(player1);
+  });
+
+  test("Game: Add Turn", () => {
+    const player1 = Player();
+    const player2 = Player();
+    const game = Game(player1, player2)
+    game.addTurn()
+    expect(game.player).toBe(player1);
   });
 });

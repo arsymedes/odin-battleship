@@ -1,4 +1,4 @@
-import { Display, Populate} from "./display"
+import { Display } from "./display";
 
 const Ship = (length, align, xCor, yCor) => {
   const hitpoints = Array(length).fill(0);
@@ -32,7 +32,7 @@ const Gameboard = () => {
 
   const missedAttacks = [];
 
-  function checkShip(xHit, yHit) {
+  function isShip(xHit, yHit) {
     let flag = false;
     ships.forEach((ship) => {
       if (
@@ -58,11 +58,25 @@ const Gameboard = () => {
   }
 
   function receiveAttack(xHit, yHit) {
-    if (checkShip(xHit, yHit) === true) {
-      
-    } else if (checkShip(xHit, yHit) === false) {
-      missedAttacks.push([xHit, yHit]);
-    }
+    ships.forEach((ship) => {
+      if (
+        ship.yCor === yHit &&
+        ship.align === "horizontal" &&
+        ship.xCor <= xHit &&
+        xHit < ship.xCor + ship.length
+      ) {
+        ship.hit(xHit - ship.xCor);
+      } else if (
+        ship.xCor === xHit &&
+        ship.align === "vertical" &&
+        ship.yCor <= yHit &&
+        yHit < ship.yCor + ship.length
+      ) {
+        ship.hit(yHit - ship.yCor);
+      } else {
+        missedAttacks.push([xHit, yHit]);
+      }
+    });
   }
 
   function allShipSunk() {
@@ -71,25 +85,87 @@ const Gameboard = () => {
 
   return {
     ships,
-    checkShip,
+    isShip,
     receiveAttack,
     allShipSunk,
   };
 };
 
 const Player = () => {
-  const gameboard = Gameboard()
+  const gameboard = Gameboard();
 
-  function attack(xHit, yHit, enemy) {
-    enemy.gameboard.receiveAttack(xHit, yHit)
+  function attack(cell, enemy) {
+    const xHit = +cell.dataset.column;
+    const yHit = +cell.dataset.row;
+
+    enemy.gameboard.receiveAttack(xHit, yHit);
+    if (enemy.gameboard.isShip(xHit, yHit)) {
+      cell.classList.remove("blank");
+      cell.classList.add("right");
+    } else {
+      cell.classList.remove("blank");
+      cell.classList.add("wrong");
+    }
   }
 
   return {
     gameboard,
     attack,
+  };
+};
+
+const Computer = () => {
+  const prototype = Player()
+
+  function randomCell() {
+    const row = Math.floor(Math.random() * 10)
+    const column = Math.floor(Math.random() * 10)
+    const cell = document.querySelector(`.player2[data-row="${row}"][data-column="${column}"]`)
+    return cell
   }
+
+  return Object.assign(prototype, {randomCell})
 }
 
-Display.gameScreen()
+const Game = (player1, player2) => {
+  let player = player1;
+  let enemy = player2;
+  let turn = 0;
 
-export { Ship, Gameboard, Player };
+  function addTurn() {
+    if (turn % 2) {
+      turn += 1
+      player = player2;
+      enemy = player1;
+    } else {
+      turn += 1
+      player = player1;
+      enemy = player2;
+    }
+  }
+
+  function gameLoop {
+    document.querySelectorAll(".blank").forEach((cell) => {
+      cell.addEventListener("click", game.player.attack(cell, game.enemy));
+      
+    });
+  }
+
+  return {
+    player,
+    enemy,
+    addTurn,
+  };
+};
+
+function start() {
+  const player1 = Player()
+  const player2 = Computer()
+  const game = Game(player1, player2)
+  Display.gameScreen();
+  Display.colorShip(document.querySelector(".grid"), player1.gameboard);
+}
+
+start();
+
+export { Ship, Gameboard, Player, Game };
