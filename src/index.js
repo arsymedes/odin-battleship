@@ -42,7 +42,6 @@ const Gameboard = () => {
         xHit < ship.xCor + ship.length
       ) {
         flag = true;
-        ship.hit(xHit - ship.xCor);
       }
       if (
         ship.xCor === xHit &&
@@ -51,7 +50,6 @@ const Gameboard = () => {
         yHit < ship.yCor + ship.length
       ) {
         flag = true;
-        ship.hit(yHit - ship.yCor);
       }
     });
     return flag;
@@ -79,6 +77,32 @@ const Gameboard = () => {
     });
   }
 
+  function isLegal(xHit, yHit) {
+    let flag = true;
+    missedAttacks.forEach((attack) => {
+      if (attack === [xHit, yHit]) flag = false;
+    });
+    ships.forEach((ship) => {
+      if (
+        ship.yCor === yHit &&
+        ship.align === "horizontal" &&
+        ship.xCor <= xHit &&
+        xHit < ship.xCor + ship.length
+      ) {
+        flag = true;
+      }
+      if (
+        ship.xCor === xHit &&
+        ship.align === "vertical" &&
+        ship.yCor <= yHit &&
+        yHit < ship.yCor + ship.length
+      ) {
+        flag = true;
+      }
+    });
+    return flag;
+  }
+
   function allShipSunk() {
     return ships.every((ship) => ship.isSunk());
   }
@@ -86,6 +110,7 @@ const Gameboard = () => {
   return {
     ships,
     isShip,
+    isLegal,
     receiveAttack,
     allShipSunk,
   };
@@ -102,10 +127,11 @@ const Player = () => {
     if (enemy.gameboard.isShip(xHit, yHit)) {
       cell.classList.remove("blank");
       cell.classList.add("right");
-    } else {
-      cell.classList.remove("blank");
-      cell.classList.add("wrong");
+      return true;
     }
+    cell.classList.remove("blank");
+    cell.classList.add("wrong");
+    return false;
   }
 
   return {
@@ -115,57 +141,67 @@ const Player = () => {
 };
 
 const Computer = () => {
-  const prototype = Player()
+  const prototype = Player();
 
   function randomCell() {
-    const row = Math.floor(Math.random() * 10)
-    const column = Math.floor(Math.random() * 10)
-    const cell = document.querySelector(`.player2[data-row="${row}"][data-column="${column}"]`)
-    return cell
+    const row = Math.floor(Math.random() * 10);
+    const column = Math.floor(Math.random() * 10);
+    const cell = document.querySelector(
+      `.player1 [data-row="${row}"][data-column="${column}"]`
+    );
+    return cell;
   }
 
-  return Object.assign(prototype, {randomCell})
-}
+  return Object.assign(prototype, { randomCell });
+};
 
 const Game = (player1, player2) => {
   let player = player1;
   let enemy = player2;
-  let turn = 0;
 
-  function addTurn() {
-    if (turn % 2) {
-      turn += 1
-      player = player2;
-      enemy = player1;
-    } else {
-      turn += 1
-      player = player1;
-      enemy = player2;
-    }
+  function switchTurn() {
+    const temp = player;
+    player = enemy;
+    enemy = temp;
   }
 
-  function gameLoop {
-    document.querySelectorAll(".blank").forEach((cell) => {
-      cell.addEventListener("click", game.player.attack(cell, game.enemy));
-      
-    });
+  function humanAttack() {
+    const flag = player.attack(this, enemy);
+    if (flag === false) switchTurn();
+    this.removeEventListener("click", humanAttack);
+  }
+
+  function computerAttack() {
+    const flag = player.attack(player.randomCell(), enemy);
+    if (flag === false) switchTurn();
+  }
+
+  function gameLoop() {
+    window.requestAnimationFrame(gameLoop);
+    if (player === player2) computerAttack();
   }
 
   return {
-    player,
-    enemy,
-    addTurn,
+    humanAttack,
+    gameLoop,
   };
 };
 
 function start() {
-  const player1 = Player()
-  const player2 = Computer()
-  const game = Game(player1, player2)
+  const player1 = Player();
+  const player2 = Computer();
+  const game = Game(player1, player2);
   Display.gameScreen();
   Display.colorShip(document.querySelector(".grid"), player1.gameboard);
+
+  const blanks = document.querySelectorAll(".player2 .blank");
+  blanks.forEach((cell) => {
+    cell.addEventListener("click", game.humanAttack);
+  });
+
+  window.requestAnimationFrame(game.gameLoop);
 }
 
 start();
 
-export { Ship, Gameboard, Player, Game };
+export { Ship, Gameboard, Player, Computer, Game };

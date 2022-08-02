@@ -1,4 +1,8 @@
-import { Ship, Gameboard, Player, Game } from "./index";
+/**
+ * @jest-environment jsdom
+ */
+
+import { Ship, Gameboard, Player, Computer, Game } from "./index";
 
 describe("Ship Test", () => {
   test("Ship: Length", () => {
@@ -73,6 +77,18 @@ describe("Gameboard Test", () => {
     gameboard.receiveAttack(4, 6);
     expect(gameboard.allShipSunk()).toBe(true);
   });
+
+  test("Gameboard: Legal Move Test, true", () => {
+    const gameboard = Gameboard();
+    gameboard.receiveAttack(0, 0);
+    expect(gameboard.isLegal(1, 1)).toBe(true);
+  });
+
+  test("Gameboard: Legal Move Test, false", () => {
+    const gameboard = Gameboard();
+    gameboard.receiveAttack(0, 0);
+    expect(gameboard.isLegal(0, 0)).toBe(false);
+  });
 });
 
 describe("Player Test", () => {
@@ -80,25 +96,28 @@ describe("Player Test", () => {
     const player1 = Player();
     const player2 = Player();
     const spy = jest.spyOn(player2.gameboard, "receiveAttack");
-    const cell = {dataset: {column: 0, row: 0}}
+    const cell = document.createElement("div");
+    cell.dataset.row = 0;
+    cell.dataset.column = 0;
     player1.attack(cell, player2);
     expect(spy).toHaveBeenCalled();
   });
-});
 
-describe("Game Test", () => {
-  test("Game: Turn", () => {
+  test("Player: Return True on Hit Attack", () => {
     const player1 = Player();
     const player2 = Player();
-    const game = Game(player1, player2)
-    expect(game.player).toBe(player1);
+    const cell = document.createElement("div");
+    cell.dataset.row = 0;
+    cell.dataset.column = 0;
+    expect(player1.attack(cell, player2)).toBe(true);
   });
 
-  test("Game: Add Turn", () => {
+  test("Player: Return False on Missed Attack", () => {
     const player1 = Player();
     const player2 = Player();
-    const game = Game(player1, player2)
-    game.addTurn()
-    expect(game.player).toBe(player1);
+    const cell = document.createElement("div");
+    cell.dataset.row = 9;
+    cell.dataset.column = 9;
+    expect(player1.attack(cell, player2)).toBe(false);
   });
 });

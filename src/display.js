@@ -9,16 +9,9 @@ const Display = (() => {
     grid.classList = `grid ${player}`;
     for (let i = 0; i < 100; i += 1) {
       const cell = document.createElement("div");
-      cell.classList = "cell";
+      cell.classList = "cell blank";
       cell.dataset.row = Math.floor(i / 10);
       cell.dataset.column = i % 10;
-
-      if (player === "player1") {
-        cell.classList.add("player1");
-      } else if (player === "player2") {
-        cell.classList.add("player2");
-      }
-
       grid.appendChild(cell);
     }
     return grid;
