@@ -38,15 +38,38 @@ const Display = (() => {
 
   function prepareScreen() {}
 
+  function winScreen(winner) {
+    const popupBg = document.createElement("div");
+    const popup = document.createElement("div");
+    const h1 = document.createElement("h1");
+    const button = document.createElement("button");
+
+    popupBg.classList.add("popup-bg");
+    popup.classList.add("popup");
+    button.classList.add("new-game");
+
+    h1.innerText = `${winner} Wins!`;
+    button.innerText = "New Game";
+
+    popup.appendChild(h1);
+    popup.appendChild(button);
+    popupBg.appendChild(popup);
+
+    body.appendChild(popupBg);
+  }
+
   function gameScreen() {
     const title = document.createElement("h1");
     const grids = document.createElement("div");
 
+    title.classList.add("title");
     title.innerText = "BATTLESHIP";
     grids.classList = "grids";
 
     grids.appendChild(makeGrid("player1"));
     grids.appendChild(makeGrid("player2"));
+
+    body.replaceChildren()
     body.appendChild(title);
     body.appendChild(grids);
     body.appendChild(makeFooter());
@@ -56,6 +79,7 @@ const Display = (() => {
     gameScreen,
     prepareScreen,
     colorShip,
+    winScreen,
   };
 })();
 

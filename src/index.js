@@ -30,8 +30,6 @@ const Gameboard = () => {
     Ship(2, "vertical", 4, 5),
   ];
 
-  const missedAttacks = [];
-
   function isShip(xHit, yHit) {
     let flag = false;
     ships.forEach((ship) => {
@@ -71,46 +69,16 @@ const Gameboard = () => {
         yHit < ship.yCor + ship.length
       ) {
         ship.hit(yHit - ship.yCor);
-      } else {
-        missedAttacks.push([xHit, yHit]);
       }
     });
-  }
-
-  function isLegal(xHit, yHit) {
-    let flag = true;
-    missedAttacks.forEach((attack) => {
-      if (attack === [xHit, yHit]) flag = false;
-    });
-    ships.forEach((ship) => {
-      if (
-        ship.yCor === yHit &&
-        ship.align === "horizontal" &&
-        ship.xCor <= xHit &&
-        xHit < ship.xCor + ship.length
-      ) {
-        flag = true;
-      }
-      if (
-        ship.xCor === xHit &&
-        ship.align === "vertical" &&
-        ship.yCor <= yHit &&
-        yHit < ship.yCor + ship.length
-      ) {
-        flag = true;
-      }
-    });
-    return flag;
   }
 
   function allShipSunk() {
     return ships.every((ship) => ship.isSunk());
   }
-
   return {
     ships,
     isShip,
-    isLegal,
     receiveAttack,
     allShipSunk,
   };
@@ -143,9 +111,18 @@ const Player = () => {
 const Computer = () => {
   const prototype = Player();
 
+  const squares = [];
+  for (let i = 0; i < 100; i += 1) {
+    const row = Math.floor(i / 10);
+    const column = i % 10;
+    squares.push([column, row]);
+  }
+
   function randomCell() {
-    const row = Math.floor(Math.random() * 10);
-    const column = Math.floor(Math.random() * 10);
+    const randNum = Math.floor(Math.random() * squares.length);
+    const column = squares[randNum][0]
+    const row = squares[randNum][1]
+    squares.splice(randNum, 1)
     const cell = document.querySelector(
       `.player1 [data-row="${row}"][data-column="${column}"]`
     );
@@ -165,15 +142,31 @@ const Game = (player1, player2) => {
     enemy = temp;
   }
 
+  function endCondition(winner) {
+    if (enemy.gameboard.allShipSunk()) {
+      Display.winScreen(winner)
+
+      document.querySelector(".new-game").addEventListener("click", () => {
+        document.querySelector(".popup-bg").remove()
+        // eslint-disable-next-line no-use-before-define
+        start()
+      })
+    }
+  }
+
   function humanAttack() {
     const flag = player.attack(this, enemy);
     if (flag === false) switchTurn();
     this.removeEventListener("click", humanAttack);
+
+    endCondition("Player 1")
   }
 
   function computerAttack() {
     const flag = player.attack(player.randomCell(), enemy);
     if (flag === false) switchTurn();
+
+    endCondition("Computer")
   }
 
   function gameLoop() {

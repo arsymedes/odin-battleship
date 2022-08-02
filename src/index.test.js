@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { Ship, Gameboard, Player, Computer, Game } from "./index";
+import { Ship, Gameboard, Player} from "./index";
 
 describe("Ship Test", () => {
   test("Ship: Length", () => {
@@ -33,27 +33,27 @@ describe("Ship Test", () => {
 });
 
 describe("Gameboard Test", () => {
-  test("Gameboard: Attack Received", () => {
+  test("Gameboard: Is Ship", () => {
     const gameboard = Gameboard();
     expect(gameboard.isShip(0, 0)).toBe(true);
   });
 
-  test("Gameboard: Attack Received, edge case", () => {
+  test("Gameboard: Is Ship, edge case", () => {
     const gameboard = Gameboard();
     expect(gameboard.isShip(4, 0)).toBe(true);
   });
 
-  test("Gameboard: Attack Received, edge case 2", () => {
+  test("Gameboard: Is Ship, edge case 2", () => {
     const gameboard = Gameboard();
     expect(gameboard.isShip(5, 0)).toBe(false);
   });
 
-  test("Gameboard: Attack Received, vertical", () => {
+  test("Gameboard: Is Ship, vertical", () => {
     const gameboard = Gameboard();
     expect(gameboard.isShip(4, 6)).toBe(true);
   });
 
-  test("Gameboard: Attack Received, vertical edge case", () => {
+  test("Gameboard: Is Ship, vertical edge case", () => {
     const gameboard = Gameboard();
     expect(gameboard.isShip(4, 7)).toBe(false);
   });
