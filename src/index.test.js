@@ -78,16 +78,28 @@ describe("Gameboard Test", () => {
     expect(gameboard.allShipSunk()).toBe(true);
   });
 
-  test("Gameboard: Legal Move Test, true", () => {
+  test('Gameboard: Create Ship', () => {
     const gameboard = Gameboard();
-    gameboard.receiveAttack(0, 0);
-    expect(gameboard.isLegal(1, 1)).toBe(true);
+    gameboard.createShip(3, "horizontal", 6, 1)
+    expect(gameboard.isShip(7, 1)).toBe(true)
   });
 
-  test("Gameboard: Legal Move Test, false", () => {
-    const gameboard = Gameboard();
-    gameboard.receiveAttack(0, 0);
-    expect(gameboard.isLegal(0, 0)).toBe(false);
+  test('Gameboard: Is Square Available, Vertical', () => {
+    const gameboard = Gameboard()
+    const ship = Ship(3, "vertical", 4, 1)
+    expect(gameboard.isSquareAvailable(ship)).toBe(false)
+  });
+
+  test('Gameboard: Is Square Available, Horizontal', () => {
+    const gameboard = Gameboard()
+    const ship = Ship(3, "horizontal", 6, 9)
+    expect(gameboard.isSquareAvailable(ship)).toBe(true)
+  });
+
+  test('Gameboard: Is Square Available, Out of Bounds', () => {
+    const gameboard = Gameboard()
+    const ship = Ship(3, "vertical", 10, 9)
+    expect(gameboard.isSquareAvailable(ship)).toBe(false)
   });
 });
 
